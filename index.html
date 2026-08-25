@@ -395,9 +395,10 @@ header{
       <p><b style="color:var(--gold);">操作：</b></p>
       <p>① 点击一个彩球选中（球会跳动）</p>
       <p>② 再点击一个空格，球就移动过去</p>
-      <p>③ 每次移动后投放 3 个新彩球（高亮标记）</p>
-      <p><b style="color:var(--gold);">加分：</b>每消除 5 连得 10 分，超出额外加 2 分/个。</p>
-      <p><b style="color:var(--gold);">换组：</b>点击顶栏"即将投放"可替换刚投放的 3 个球颜色和位置，扣 5 分/次（最低 0 分）。</p>
+      <p>③ 没有消除时，会投放 3 个新彩球（高亮标记，下次可换组）</p>
+      <p><b style="color:var(--gold);">加分：</b>每消除 5 连得 10 分，超出额外加 2 分/个（支持连锁消除）。</p>
+      <p><b style="color:var(--gold);">投放：</b>每次移动后如果没消除，才投放 3 个新球；只要有消除（含连锁）就绝不投放。</p>
+      <p><b style="color:var(--gold);">换组：</b>点击顶栏"即将投放"可替换刚投放的球颜色和位置，空位不足则原地换色。扣 5 分/次（最低 0 分）。</p>
       <p><b style="color:var(--gold);">撤销：</b>仅支持撤销上一步操作。</p>
       <p><b style="color:var(--gold);">提示：</b>棋盘满了就游戏结束，动动脑子吧！</p>
     </div>
@@ -741,42 +742,107 @@ function moveBall(sx, sy, tx, ty){
   grid[ty][tx] = color;
   selected = null;
 
+  // 链式消除循环:检查所有被消除位置的邻居,直到没有新的 5 连
+  function chainClear(startSet){
+    const totalCleared = new Set(startSet.map(([x,y]) => x+','+y));
+    let changed = true;
+    let loopGuard = 0;
+    while (changed && loopGuard < 20){
+      changed = false; loopGuard++;
+      const scan = Array.from(totalCleared).map(s => s.split(',').map(Number));
+      for (const [cx, cy] of scan){
+        // 扫描该球 4 方向邻格,看清除后是否形成新的 5 连
+        const dirs = [[1,0],[0,1],[1,1],[1,-1],[-1,0],[0,-1],[-1,-1],[-1,1]];
+        for (const [dx, dy] of dirs){
+          const nx = cx + dx, ny = cy + dy;
+          if (nx<1||nx>COLS||ny<1||ny>ROWS||grid[ny][nx]===0) continue;
+          const key = nx+','+ny;
+          if (totalCleared.has(key)) continue;
+          const lc = checkLinesAt(nx, ny);
+          if (lc.length >= LINE_LEN){
+            lc.forEach(([lx,ly]) => { const k=lx+','+ly; if(!totalCleared.has(k)){totalCleared.add(k); changed=true;} });
+          }
+        }
+      }
+    }
+    return Array.from(totalCleared).map(s => s.split(',').map(Number));
+  }
+
   // 检查 5 连(移动后)
-  const toClear = checkLinesAt(tx, ty);
+  let toClear = checkLinesAt(tx, ty);
+  let movedClearedCount = 0;
   if (toClear.length > 0){
     Audio.sfxMatch();
-    toClear.forEach(([x, y]) => grid[y][x] = 0);
-    const groups = Math.floor(toClear.length / LINE_LEN);
-    const extra = toClear.length - groups * LINE_LEN;
+    // 链式清除所有被影响的 5 连
+    const allC = chainClear(toClear);
+    allC.forEach(([x, y]) => grid[y][x] = 0);
+    movedClearedCount = allC.length;
+    const groups = Math.floor(movedClearedCount / LINE_LEN);
+    const extra = movedClearedCount - groups * LINE_LEN;
     score += groups * SCORE_PER_LINE + extra * 2;
     // 消除后立即渲染,让用户看到消除效果
     render();
     updateStats();
+    // 有消除,绝对不投放新球,直接 return
+    setTimeout(() => {
+      if (countEmpty() === 0){
+        gameOver = true;
+        Audio.sfxDead();
+        setTimeout(showGameOver, 300);
+      }
+    }, 120);
+    return;
   }
 
-  // 无论是否消除,都投放下一组 3 个球
+  // 走到这里:移动没有消除,必须投放下一组 3 个球
   setTimeout(() => {
     const placed = dropNextGroup();
     lastDropped = placed;
-    newDropped = placed;  // 标记新投放位置用于高亮,持续到下一次移动
-    // 投放后检测每个新球是否触发 5 连
-    let allClear = new Set();
-    placed.forEach(([px, py]) => {
-      const lc = checkLinesAt(px, py);
-      lc.forEach(c => allClear.add(c[0] + ',' + c[1]));
-    });
-    if (allClear.size > 0){
-      Audio.sfxMatch();
-      allClear.forEach(s => {
-        const [x, y] = s.split(',').map(Number);
+    newDropped = placed;
+
+    // 投放后链式 5 连检测
+    let dropClearedTotal = new Set();
+    let loopGuard = 0;
+    let checkSet = placed.map(([x,y]) => x+','+y);
+    while (checkSet.length > 0 && loopGuard < 20){
+      loopGuard++;
+      const newClear = new Set();
+      for (const key of checkSet){
+        const [x, y] = key.split(',').map(Number);
+        if (grid[y][x] === 0) continue;
+        const lc = checkLinesAt(x, y);
+        if (lc.length >= LINE_LEN){
+          lc.forEach(([lx,ly]) => { const k=lx+','+ly; newClear.add(k); dropClearedTotal.add(k); });
+        }
+      }
+      if (newClear.size === 0) break;
+      // 清除本轮找到的
+      newClear.forEach(k => {
+        const [x, y] = k.split(',').map(Number);
         grid[y][x] = 0;
       });
-      const cnt = allClear.size;
+      if (dropClearedTotal.size > 0) Audio.sfxMatch();
+      // 下一轮:以刚清除位置为中心扫描邻格
+      const nextCheck = new Set();
+      newClear.forEach(k => {
+        const [cx, cy] = k.split(',').map(Number);
+        const dirs=[[1,0],[0,1],[1,1],[1,-1],[-1,0],[0,-1],[-1,-1],[-1,1]];
+        for (const [dx, dy] of dirs){
+          const nx=cx+dx, ny=cy+dy;
+          if (nx<1||nx>COLS||ny<1||ny>ROWS) continue;
+          if (grid[ny][nx] !== 0) nextCheck.add(nx+','+ny);
+        }
+      });
+      checkSet = Array.from(nextCheck);
+    }
+    // 结算投放消除得分
+    if (dropClearedTotal.size > 0){
+      const cnt = dropClearedTotal.size;
       const groups = Math.floor(cnt / LINE_LEN);
       const extra = cnt - groups * LINE_LEN;
       score += groups * SCORE_PER_LINE + extra * 2;
-      // 移除被消除的高亮标记
-      newDropped = newDropped.filter(([nx, ny]) => !allClear.has(nx + ',' + ny));
+      newDropped = newDropped.filter(([nx, ny]) => !dropClearedTotal.has(nx + ',' + ny));
+      lastDropped = lastDropped.filter(([nx, ny]) => !dropClearedTotal.has(nx + ',' + ny));
     }
     nextGroup = generateNextGroup();
     render();
@@ -906,35 +972,49 @@ function swapLastDropped(){
     toast('最近投放的球已全部消除');
     return;
   }
-  // 换组允许扣到负分,无需检查积分是否足够
-  // 需要的空位数 = valid 数量(旧位置要释放) + valid 数量(新位置要占用)
-  // 旧位置会被释放,所以实际只需要 valid 个空位
+  // 收集空位
   const empty = [];
   for (let y = 1; y <= ROWS; y++)
     for (let x = 1; x <= COLS; x++)
       if (grid[y][x] === 0) empty.push([x, y]);
-  if (empty.length < valid.length){
-    Audio.sfxError();
-    toast('空位不足,无法换位置');
-    return;
-  }
+
   Audio.sfxClick();
   if (score > 0){
     score = Math.max(0, score - SWAP_COST);
-    toast(`换组+换位置,扣 ${SWAP_COST} 分`);
+  }
+
+  // 判断是否够空位换位置,否则只换颜色(原地换色)
+  const canMove = empty.length >= valid.length;
+  let newPlaced;
+
+  if (canMove){
+    // 换色 + 换位置
+    toast(`换色+换位置,扣 ${score > 0 ? SWAP_COST : 0} 分`);
+    // 清除旧位置的球
+    valid.forEach(([x, y]) => { grid[y][x] = 0; });
+    // 打乱空位,分配新位置
+    shuffle(empty);
+    newPlaced = [];
+    for (let i = 0; i < valid.length; i++){
+      const [nx, ny] = empty[i];
+      grid[ny][nx] = nextGroup[i];
+      newPlaced.push([nx, ny]);
+    }
   } else {
+    // 空位不足,原地换色(不换位置)
+    toast(`空位不足,原地换色,扣 ${score > 0 ? SWAP_COST : 0} 分`);
+    newPlaced = [];
+    for (let i = 0; i < valid.length; i++){
+      const [x, y] = valid[i];
+      grid[y][x] = nextGroup[i];
+      newPlaced.push([x, y]);
+    }
+  }
+
+  if (score === 0){
     toast('积分为0,免费换组');
   }
-  // 清除旧位置的球
-  valid.forEach(([x, y]) => { grid[y][x] = 0; });
-  // 打乱空位,分配新位置
-  shuffle(empty);
-  const newPlaced = [];
-  for (let i = 0; i < valid.length; i++){
-    const [nx, ny] = empty[i];
-    grid[ny][nx] = nextGroup[i];
-    newPlaced.push([nx, ny]);
-  }
+
   newDropped = newPlaced;
   lastDropped = newPlaced;
   // 检查换组后是否触发 5 连
