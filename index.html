@@ -151,23 +151,23 @@ header{
   position:relative;display:grid;
   grid-template-columns:repeat(9,1fr);
   grid-template-rows:repeat(9,1fr);
-  gap:3px;aspect-ratio:1;width:100%;
-  background:#000;border-radius:6px;padding:3px;
+  gap:2px;aspect-ratio:1;width:100%;
+  background:#2a2a2a;border-radius:6px;padding:3px;
   box-shadow:
-    inset 0 2px 8px rgba(0,0,0,.9),
+    inset 0 2px 8px rgba(0,0,0,.8),
     inset 0 -1px 3px rgba(255,255,255,.05);
 }
 .cell{
   position:relative;display:flex;
   align-items:center;justify-content:center;
-  background:linear-gradient(145deg,rgba(255,255,255,.1),rgba(255,255,255,.04));
+  background:linear-gradient(145deg,#5a5a5a,#454545);
   border-radius:0;
   cursor:pointer;
   box-shadow:
-    inset 1px 1px 2px rgba(255,255,255,.08),
-    inset -1px -1px 2px rgba(0,0,0,.5);
+    inset 1px 1px 2px rgba(255,255,255,.15),
+    inset -1px -1px 2px rgba(0,0,0,.4);
 }
-.cell.empty:hover{background:linear-gradient(145deg,rgba(0,229,255,.15),rgba(0,229,255,.05));}
+.cell.empty:hover{background:linear-gradient(145deg,#666,#555);}
 .cell.target-hint{
   background:rgba(255,209,102,.55);
   animation:pulse 1s infinite;
@@ -342,6 +342,7 @@ header{
   <button class="btn" id="pauseBtn">暂停</button>
   <button class="btn primary" id="restartBtn">重玩</button>
   <button class="btn" id="rankBtn">排行</button>
+  <button class="btn" id="helpBtn">说明</button>
 </div>
 
 <div class="board-wrap">
@@ -390,12 +391,14 @@ header{
     <h2 style="text-align:center;">🎮 游戏说明</h2>
     <div style="font-size:15px;line-height:1.9;color:var(--text);">
       <p><b style="color:var(--gold);">目标：</b>将 5 个同色彩球连成一条直线（横/竖/斜），消除得分。</p>
+      <p><b style="color:var(--gold);">开局：</b>9×9 棋盘随机 5 个彩球。</p>
       <p><b style="color:var(--gold);">操作：</b></p>
       <p>① 点击一个彩球选中（球会跳动）</p>
       <p>② 再点击一个空格，球就移动过去</p>
-      <p>③ 移动后会投放 3 个新彩球（高亮闪烁）</p>
+      <p>③ 每次移动后投放 3 个新彩球（高亮标记）</p>
       <p><b style="color:var(--gold);">加分：</b>每消除 5 连得 10 分，超出额外加 2 分/个。</p>
-      <p><b style="color:var(--gold);">换组：</b>点击顶栏"即将投放"可替换刚投放的 3 个球颜色，扣 10 分/次。</p>
+      <p><b style="color:var(--gold);">换组：</b>点击顶栏"即将投放"可替换刚投放的 3 个球颜色和位置，扣 5 分/次（最低 0 分）。</p>
+      <p><b style="color:var(--gold);">撤销：</b>仅支持撤销上一步操作。</p>
       <p><b style="color:var(--gold);">提示：</b>棋盘满了就游戏结束，动动脑子吧！</p>
     </div>
     <div class="btns" style="margin-top:12px;">
@@ -959,36 +962,13 @@ function swapLastDropped(){
   renderNextGroup();
   updateStats();
 }
-document.getElementById('nextGroupWrap').onclick = swapLastDropped;
-
-// ============ 提示(高亮"再放一个就 5 连"的位置)============
-function findHints(){
-  const hints = [];
-  for (let y = 1; y <= ROWS; y++){
-    for (let x = 1; x <= COLS; x++){
-      if (grid[y][x] !== 0) continue;
-      for (let c = 1; c <= TYPES; c++){
-        grid[y][x] = c;
-        const lines = checkLinesAt(x, y);
-        grid[y][x] = 0;
-        if (lines.length >= LINE_LEN){
-          hints.push([x, y, c]);
-          break;
-        }
-      }
-    }
-  }
-  return hints;
-}
-document.getElementById('hintBtn').onclick = () => {
+function bind(id, evt, fn){ const el = document.getElementById(id); if(el) el[evt] = fn; }
+bind('nextGroupWrap', 'onclick', swapLastDropped);
+bind('hintBtn', 'onclick', () => {
   if (paused || gameOver) return;
   const hints = findHints();
-  if (hints.length === 0){
-    toast('暂无可成 5 连的位置');
-    return;
-  }
+  if (hints.length === 0){ toast('暂无可成 5 连的位置'); return; }
   Audio.sfxClick();
-  // 高亮第一个候选位置
   const [hx, hy, hc] = hints[0];
   boardEl.querySelectorAll('.cell').forEach(el => {
     const x = +el.dataset.x, y = +el.dataset.y;
@@ -998,7 +978,36 @@ document.getElementById('hintBtn').onclick = () => {
     }
   });
   toast(`提示:在 (列${hx}, 行${hy}) 放置可成 5 连`);
-};
+});
+bind('undoBtn', 'onclick', undo);
+bind('pauseBtn', 'onclick', () => {
+  if (gameOver) return;
+  paused = true;
+  document.getElementById('pauseScore').textContent = score;
+  document.getElementById('pauseOverlay').classList.remove('hidden');
+});
+bind('restartBtn', 'onclick', restartGame);
+bind('rankBtn', 'onclick', () => { renderRank(); document.getElementById('rankOverlay').classList.remove('hidden'); });
+bind('helpBtn', 'onclick', () => { document.getElementById('helpOverlay').classList.remove('hidden'); });
+bind('musicBtn', 'onclick', () => {
+  Audio.init();
+  const on = Audio.toggleMusic();
+  const btn = document.getElementById('musicBtn');
+  btn.textContent = on ? '🔊' : '🔇';
+  btn.classList.toggle('muted', !on);
+  toast(on ? `音乐:${Audio.getTrackName()}` : '音乐已关闭');
+});
+bind('musicSelect', 'onchange', (e) => {
+  const idx = parseInt(e.target.value, 10);
+  Audio.init();
+  Audio.setTrack(idx);
+  if (!Audio.isMusicOn()){
+    const btn = document.getElementById('musicBtn');
+    btn.textContent = '🔊';
+    btn.classList.remove('muted');
+  }
+  toast(`已切换:${Audio.getTrackName()}`);
+});
 
 // ============ 撤销 ============
 function snapshotState(){
@@ -1066,18 +1075,15 @@ function saveScore(){
   renderRank();
   document.getElementById('rankOverlay').classList.remove('hidden');
 }
+window.saveScore = saveScore;
+window.restartGame = restartGame;
+window.closeHelp = closeHelp;
+window.closeRank = closeRank;
 
 // ============ 排行榜 ============
-document.getElementById('rankBtn').onclick = () => {
-  renderRank();
-  document.getElementById('rankOverlay').classList.remove('hidden');
-};
 function closeRank(){
   document.getElementById('rankOverlay').classList.add('hidden');
 }
-document.getElementById('helpBtn').onclick = () => {
-  document.getElementById('helpOverlay').classList.remove('hidden');
-};
 function closeHelp(){
   document.getElementById('helpOverlay').classList.add('hidden');
 }
@@ -1105,29 +1111,6 @@ function renderRank(){
 function escapeHtml(s){
   return String(s).replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c]));
 }
-
-// ============ 音乐按钮 ============
-document.getElementById('musicBtn').onclick = () => {
-  Audio.init();
-  const on = Audio.toggleMusic();
-  const btn = document.getElementById('musicBtn');
-  btn.textContent = on ? '🔊' : '🔇';
-  btn.classList.toggle('muted', !on);
-  toast(on ? `音乐:${Audio.getTrackName()}` : '音乐已关闭');
-};
-// 音乐选择下拉
-document.getElementById('musicSelect').onchange = (e) => {
-  const idx = parseInt(e.target.value, 10);
-  Audio.init();
-  Audio.setTrack(idx);
-  if (!Audio.isMusicOn()){
-    // 用户之前关了音乐,切歌时自动开启
-    const btn = document.getElementById('musicBtn');
-    btn.textContent = '🔊';
-    btn.classList.remove('muted');
-  }
-  toast(`已切换:${Audio.getTrackName()}`);
-};
 
 // ============ Toast ============
 let toastTimer;

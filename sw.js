@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wuzcaiqiu-v3';
+const CACHE_NAME = 'wuzcaiqiu-v4';
 const ASSETS = [
   './',
   './index.html',
