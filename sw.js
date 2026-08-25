@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wuzcaiqiu-v2';
+const CACHE_NAME = 'wuzcaiqiu-v3';
 const ASSETS = [
   './',
   './index.html',
@@ -24,13 +24,10 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
   e.respondWith(
-    caches.match(e.request).then(cached => {
-      if (cached) return cached;
-      return fetch(e.request).then(response => {
-        const clone = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(e.request, clone));
-        return response;
-      }).catch(() => caches.match('./index.html'));
-    })
+    fetch(e.request).then(response => {
+      const clone = response.clone();
+      caches.open(CACHE_NAME).then(cache => cache.put(e.request, clone));
+      return response;
+    }).catch(() => caches.match(e.request).then(c => c || caches.match('./')))
   );
 });
