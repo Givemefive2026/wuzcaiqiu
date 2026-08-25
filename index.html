@@ -342,8 +342,6 @@ header{
   <button class="btn" id="pauseBtn">暂停</button>
   <button class="btn primary" id="restartBtn">重玩</button>
   <button class="btn" id="rankBtn">排行</button>
-  <button class="btn" id="helpBtn">说明</button>
-  <button class="btn" id="exitBtn">退出</button>
 </div>
 
 <div class="board-wrap">
@@ -402,17 +400,6 @@ header{
     </div>
     <div class="btns" style="margin-top:12px;">
       <button class="btn primary" onclick="closeHelp()">知道了</button>
-    </div>
-  </div>
-</div>
-
-<div class="overlay hidden" id="exitOverlay">
-  <div class="modal">
-    <h2>退出游戏</h2>
-    <p>确定要退出吗?</p>
-    <div class="btns">
-      <button class="btn primary" onclick="doExit()">确定</button>
-      <button class="btn" onclick="closeExit()">取消</button>
     </div>
   </div>
 </div>
@@ -1093,18 +1080,6 @@ document.getElementById('helpBtn').onclick = () => {
 };
 function closeHelp(){
   document.getElementById('helpOverlay').classList.add('hidden');
-}
-document.getElementById('exitBtn').onclick = () => {
-  document.getElementById('exitOverlay').classList.remove('hidden');
-};
-function closeExit(){
-  document.getElementById('exitOverlay').classList.add('hidden');
-}
-function doExit(){
-  // PWA 独立模式下无法真正关闭页面,改为回到起始页并清空状态
-  try{ window.close(); }catch(e){}
-  // window.close() 在非脚本打开的窗口中无效,用重定向到空白页或主页兜底
-  document.body.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;color:#fff;background:linear-gradient(180deg,#1a1a2e,#16213e);font-family:sans-serif;text-align:center;padding:20px;"><div style="font-size:48px;margin-bottom:16px;">👋</div><h2 style="color:#00e5ff;margin:0 0 8px;">已退出游戏</h2><p style="color:#9aa3c4;margin:0 0 20px;font-size:14px;">感谢游玩五子彩球消消乐</p><button onclick="location.reload()" style="padding:10px 24px;border:none;border-radius:10px;background:linear-gradient(135deg,#00e5ff,#2979ff);color:#fff;font-size:15px;font-weight:600;cursor:pointer;">重新开始</button></div>';
 }
 function clearRank(){
   if (confirm('确定清空所有排行记录?')){
