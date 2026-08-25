@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="彩球消消乐">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIgMTkyIj4KICA8cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgZmlsbD0iIzFhMWEyZSIvPiAgPGNpcmNsZSBjeD0iNTYiIGN5PSI1NiIgcj0iMjAiIGZpbGw9IiNmZjY1NjYiLz4KICA8Y2lyY2xlIGN4PSIxMzYiIGN5PSI1NiIgcj0iMjAiIGZpbGw9IiNmZjkxMjkiLz4KICA8Y2lyY2xlIGN4PSI1NiIgY3k9IjEzNiIgcj0iMjAiIGZpbGw9IiM1MmM4NzgiLz4KICA8Y2lyY2xlIGN4PSIxMzYiIGN5PSIxMzYiIHI9IjIwIiBmaWxsPSIjNGRhYjciLz4KICA8Y2lyY2xlIGN4PSI5NiIgY3k9Ijk2IiByPSIyMCIgZmlsbD0iI2M3N2RmZiIvPgogIDxyZWN0IHg9IjI0IiB5PSI0IiB3aWR0aD0iMTQ0IiBoZWlnaHQ9IjI4IiBmaWxsPSJ1cmFiaWEoMCwgMCwwLzAwZTVmZiwwLjEpIiByb3VuZGVkPSI0Ii8+CiAgPGN5bGNlIGN4PSI1NiIgY3k9IjE5IiByPSI3IiBmaWxsPSIjMDBlNWZmIi8+CiAgPGN5bGNlIGN4PSI5NiIgY3k9IjE5IiByPSI3IiBmaWxsPSIjNzM0ZGZmIi8+CiAgPGN5bGNlIGN4PSIxMzYiIGN5PSIxOSIgcj0iNyIgZmlsbD0iI2ZmNDA4MSIvPgogIDxyZWN0IHg9IjIgdmlnb3J0PSIwIiB3aWR0aD0iMTg4IiBoZWlnaHQ9IjE4OCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAlMTI3OTZmIiBzdHJva2Utd2lkdGg9IjQiIHJvdW5kZXM9IjEyIi8+Cjwvc3ZnPg==">
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIgMTkyIj4KICA8cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgZmlsbD0iIzFhMWEyZSIvPiAgPGNpcmNsZSBjeD0iNTYiIGN5PSI1NiIgcj0iMjAiIGZpbGw9IiNmZjY1NjYiLz4KICA8Y2lyY2xlIGN4PSIxMzYiIGN5PSI1NiIgcj0iMjAiIGZpbGw9IiNmZjkxMjkiLz4KICA8Y2lyY2xlIGN4PSI1NiIgY3k9IjEzNiIgcj0iMjAiIGZpbGw9IiM1MmM4NzgiLz4KICA8Y2lyY2xlIGN4PSIxMzYiIGN5PSIxMzYiIHI9IjIwIiBmaWxsPSIjNGRhYjciLz4KICA8Y2lyY2xlIGN4PSI5NiIgY3k9Ijk2IiByPSIyMCIgZmlsbD0iI2M3N2RmZiIvPgogIDxyZWN0IHg9IjI0IiB5PSI0IiB3aWR0aD0iMTQ0IiBoZWlnaHQ9IjI4IiBmaWxsPSJ1cmFiaWEoMCwgMCwwLzAwZTVmZiwwLjEpIiByb3VuZGVkPSI0Ii8+CiAgPGN5bGNlIGN4PSI1NiIgY3k9IjE5IiByPSI3IiBmaWxsPSIjMDBlNWZmIi8+CiAgPGN5bGNlIGN4PSI5NiIgY3k9IjE5IiByPSI3IiBmaWxsPSIjNzM0ZGZmIi8+CiAgPGN5bGNlIGN4PSIxMzYiIGN5PSIxOSIgcj0iNyIgZmlsbD0iI2ZmNDA4MSIvPgogIDxyZWN0IHg9IjIgdmlnb3J0PSIwIiB3aWR0aD0iMTg4IiBoZWlnaHQ9IjE4OCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAlMTI3OTZmIiBzdHJva2Utd2lkdGg9IjQiIHJvdW5kZXM9IjEyIi8+Cjwvc3ZnPg==">
+<title>五子彩球消消乐</title>
+<style>
+:root{
+  --bg1:#1a1a2e; --bg2:#16213e;
+  --panel:rgba(255,255,255,.08);
+  --text:#fff; --muted:#9aa3c4;
+  --accent:#00e5ff; --gold:#ffd166;
+  --board-bg:#c0c0c0;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;height:100%;}
+body{
+  background:linear-gradient(180deg,var(--bg1) 0%,var(--bg2) 100%);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  display:flex;flex-direction:column;align-items:center;
+  padding:10px;padding-bottom:env(safe-area-inset-bottom);
+  min-height:100vh;overflow-x:hidden;touch-action:manipulation;
+}
+header{
+  width:100%;max-width:560px;
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:10px;padding:6px 10px;
+  background:linear-gradient(135deg,rgba(0,229,255,.12) 0%,rgba(41,121,255,.08) 100%);
+  border:1px solid rgba(0,229,255,.25);
+  border-radius:14px;
+  backdrop-filter:blur(8px);
+}
+.title{
+  font-size:24px;font-weight:800;letter-spacing:2px;
+  background:linear-gradient(135deg,#00e5ff 0%,#7c4dff 50%,#ff4081 100%);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+  text-shadow:none;
+  filter:drop-shadow(0 2px 6px rgba(0,229,255,.3));
+}
+.header-right{display:flex;align-items:center;gap:10px;}
+.music-btn{
+  width:40px;height:40px;border-radius:50%;
+  background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.04));
+  border:1px solid rgba(255,255,255,.2);
+  font-size:18px;cursor:pointer;line-height:1;
+  transition:all .15s;
+  display:flex;align-items:center;justify-content:center;padding:0;
+  box-shadow:0 2px 6px rgba(0,0,0,.3),inset 0 1px 2px rgba(255,255,255,.15);
+}
+.music-btn:active{transform:scale(.9);}
+.music-btn.muted{opacity:.45;}
+.music-select-wrap{display:flex;align-items:center;gap:4px;}
+.music-select{
+  background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.04));
+  border:1px solid rgba(255,255,255,.2);
+  color:#fff;font-size:14px;font-weight:500;
+  border-radius:8px;padding:4px 8px;
+  cursor:pointer;outline:none;
+  max-width:80px;
+  box-shadow:inset 0 1px 2px rgba(255,255,255,.1);
+}
+.music-select option{background:#1a1a2e;color:#fff;}
+.score-box{font-size:15px;color:var(--muted);text-align:right;}
+.score-box b{color:var(--gold);font-weight:700;font-size:22px;
+  text-shadow:0 0 10px rgba(255,209,102,.4);}
+
+.next-group-wrap{
+  width:100%;max-width:560px;
+  background:linear-gradient(135deg,rgba(0,229,255,.1) 0%,rgba(124,77,255,.08) 100%);
+  border:1px solid rgba(0,229,255,.3);
+  border-radius:14px;padding:12px 14px;
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:10px;cursor:pointer;
+  transition:all .2s;
+  box-shadow:0 4px 14px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.08);
+}
+.next-group-wrap:active{
+  background:linear-gradient(135deg,rgba(0,229,255,.18),rgba(124,77,255,.14));
+  transform:scale(.98);
+}
+.next-group-wrap.disabled{opacity:.5;cursor:not-allowed;}
+.ng-label{font-size:15px;color:var(--muted);line-height:1.5;}
+.ng-label b{
+  color:var(--accent);font-weight:700;
+  text-shadow:0 0 8px rgba(0,229,255,.4);
+}
+.ng-balls{display:flex;gap:8px;}
+.ng-ball{
+  width:30px;height:30px;border-radius:50%;
+  box-shadow:
+    0 2px 4px rgba(0,0,0,.45),
+    inset -2px -3px 4px rgba(0,0,0,.3),
+    inset 2px 2px 3px rgba(255,255,255,.55);
+}
+.ng-ball.small{width:22px;height:22px;}
+
+.toolbar{
+  width:100%;max-width:560px;display:flex;gap:8px;margin-bottom:10px;
+}
+.btn{
+  flex:1;
+  background:linear-gradient(145deg,rgba(255,255,255,.14),rgba(255,255,255,.06));
+  border:1px solid rgba(255,255,255,.2);
+  color:var(--text);padding:10px 0;border-radius:12px;
+  font-size:15px;font-weight:600;cursor:pointer;
+  transition:all .15s;
+  box-shadow:0 3px 8px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.12);
+  position:relative;overflow:hidden;
+}
+.btn::before{
+  content:'';position:absolute;top:0;left:-100%;
+  width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);
+  transition:left .4s;
+}
+.btn:hover::before{left:100%;}
+.btn:active{transform:scale(.94);box-shadow:0 1px 3px rgba(0,0,0,.3);}
+.btn.primary{
+  background:linear-gradient(135deg,#00e5ff 0%,#2979ff 100%);
+  border-color:transparent;font-weight:700;
+  box-shadow:0 4px 14px rgba(0,229,255,.35),inset 0 1px 0 rgba(255,255,255,.2);
+}
+.btn.primary:hover{
+  box-shadow:0 6px 20px rgba(0,229,255,.5),inset 0 1px 0 rgba(255,255,255,.2);
+}
+.btn:disabled{opacity:.35;cursor:not-allowed;}
+.btn:disabled:hover::before{display:none;}
+
+.board-wrap{
+  position:relative;width:100%;max-width:560px;
+  padding:4px;background:rgba(0,0,0,.3);
+  border-radius:10px;border:1px solid rgba(255,255,255,.08);
+}
+.board{
+  position:relative;display:grid;
+  grid-template-columns:repeat(9,1fr);
+  grid-template-rows:repeat(9,1fr);
+  gap:2px;aspect-ratio:1;width:100%;
+  background:var(--board-bg);border-radius:6px;padding:3px;
+}
+.cell{
+  position:relative;display:flex;
+  align-items:center;justify-content:center;
+  background:rgba(255,255,255,.18);border-radius:4px;
+  cursor:pointer;
+}
+.cell.empty:hover{background:rgba(255,255,255,.28);}
+.cell.target-hint{
+  background:rgba(255,209,102,.55);
+  animation:pulse 1s infinite;
+}
+@keyframes pulse{0%,100%{box-shadow:inset 0 0 0 2px #ffd166;}50%{box-shadow:inset 0 0 0 3px #fff;}}
+.ball{
+  width:92%;height:92%;border-radius:50%;
+  position:relative;
+  box-shadow:
+    0 5px 10px rgba(0,0,0,.55),
+    0 2px 4px rgba(0,0,0,.3),
+    inset -4px -6px 9px rgba(0,0,0,.45),
+    inset 3px 4px 6px rgba(255,255,255,.7);
+  cursor:pointer;transition:transform .12s,box-shadow .12s;
+}
+.ball::before{
+  content:'';position:absolute;
+  top:10%;left:15%;
+  width:40%;height:28%;
+  border-radius:50%;
+  background:radial-gradient(ellipse at center,rgba(255,255,255,.95) 0%,rgba(255,255,255,.1) 80%);
+  pointer-events:none;
+}
+.ball::after{
+  content:'';position:absolute;
+  bottom:8%;right:12%;
+  width:22%;height:14%;
+  border-radius:50%;
+  background:radial-gradient(ellipse at center,rgba(255,255,255,.5) 0%,rgba(255,255,255,0) 85%);
+  pointer-events:none;
+}
+.ball:active{transform:scale(.9);}
+.ball.selected{
+  transform:scale(1.12);
+  box-shadow:
+    0 0 0 3px #fff,0 0 18px 6px rgba(255,255,255,.6),
+    0 5px 10px rgba(0,0,0,.55),
+    inset -4px -6px 9px rgba(0,0,0,.4),
+    inset 3px 4px 6px rgba(255,255,255,.6);
+  animation:bob 1s infinite;
+}
+@keyframes bob{0%,100%{transform:scale(1.12);}50%{transform:scale(1.18);}}
+.ball.hint-target{
+  box-shadow:
+    0 0 0 3px #ffd166,0 0 18px 6px rgba(255,209,102,.7),
+    0 5px 10px rgba(0,0,0,.55),
+    inset -4px -6px 9px rgba(0,0,0,.4),
+    inset 3px 4px 6px rgba(255,255,255,.6);
+}
+.cell.empty .ball{display:none;}
+.ball.new-ball{
+  animation:newBallPulse 1s ease-in-out infinite;
+  transition:none !important;
+}
+@keyframes newBallPulse{
+  0%,100%{
+    box-shadow:
+      0 5px 10px rgba(0,0,0,.55),
+      0 0 0 2px rgba(255,255,255,.9),
+      inset -4px -6px 9px rgba(0,0,0,.45),
+      inset 3px 4px 6px rgba(255,255,255,.7);
+    transform:scale(1);
+  }
+  50%{
+    box-shadow:
+      0 5px 10px rgba(0,0,0,.55),
+      0 0 0 3px rgba(255,255,255,1),
+      0 0 16px 5px rgba(255,255,255,.6),
+      inset -4px -6px 9px rgba(0,0,0,.45),
+      inset 3px 4px 6px rgba(255,255,255,.7);
+    transform:scale(1.1);
+  }
+}
+.c1{
+  background:
+    radial-gradient(circle at 38% 32%,#ff6b6b 0%,#e63946 45%,#9d0208 100%);
+}
+.c2{
+  background:
+    radial-gradient(circle at 38% 32%,#ffd93d 0%,#f4a100 45%,#b8860b 100%);
+}
+.c3{
+  background:
+    radial-gradient(circle at 38% 32%,#52c878 0%,#2d8f4e 45%,#0f5132 100%);
+}
+.c4{
+  background:
+    radial-gradient(circle at 38% 32%,#4dabf7 0%,#1971c2 45%,#0b4a8a 100%);
+}
+.c5{
+  background:
+    radial-gradient(circle at 38% 32%,#c77dff 0%,#7b2cbf 45%,#3c096c 100%);
+}
+.path{position:absolute;top:7px;left:7px;right:7px;bottom:7px;pointer-events:none;}
+.overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.7);
+  display:flex;align-items:center;justify-content:center;
+  padding:16px;z-index:50;backdrop-filter:blur(4px);
+}
+.overlay.hidden{display:none;}
+.modal{
+  background:linear-gradient(160deg,#1f2748,#16213e);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:16px;padding:20px 18px;
+  width:100%;max-width:320px;text-align:center;
+  box-shadow:0 12px 40px rgba(0,0,0,.5);
+}
+.modal h2{margin:0 0 10px;font-size:18px;}
+.modal p{color:var(--muted);margin:6px 0;font-size:14px;}
+.modal input{
+  width:100%;padding:10px;border-radius:8px;
+  border:1px solid rgba(255,255,255,.2);
+  background:rgba(255,255,255,.06);color:#fff;
+  font-size:14px;margin:10px 0;outline:none;
+}
+.modal input:focus{border-color:var(--accent);}
+.modal .btns{display:flex;gap:8px;margin-top:8px;}
+.modal .btns .btn{flex:1;}
+.score-list{text-align:left;margin:8px 0;padding:0;max-height:240px;overflow:auto;}
+.score-list li{
+  list-style:none;display:flex;justify-content:space-between;
+  padding:7px 4px;border-bottom:1px solid rgba(255,255,255,.07);font-size:14px;
+}
+.score-list li:last-child{border-bottom:none;}
+.score-list li:nth-child(1) b{color:#ffd700;}
+.score-list li:nth-child(2) b{color:#c0c0c0;}
+.score-list li:nth-child(3) b{color:#cd7f32;}
+.toast{
+  position:fixed;top:18px;left:50%;transform:translateX(-50%);
+  background:rgba(0,0,0,.85);color:#fff;
+  padding:8px 16px;border-radius:20px;font-size:13px;
+  z-index:60;opacity:0;transition:opacity .25s;pointer-events:none;
+}
+.toast.show{opacity:1;}
+@media (max-width:360px){
+  .btn{font-size:13px;padding:8px 0;}
+  .title{font-size:20px;}
+  .ng-ball{width:24px;height:24px;}
+  .score-box b{font-size:18px;}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="title">五子彩球消消乐</div>
+  <div class="header-right">
+    <div class="music-select-wrap">
+      <button class="music-btn" id="musicBtn" type="button" aria-label="背景音乐">🔊</button>
+      <select id="musicSelect" class="music-select" title="选择音乐">
+        <option value="0">① 流行</option>
+        <option value="1">② R&B</option>
+        <option value="2">③ 电音</option>
+        <option value="3">④ 民谣</option>
+        <option value="4">⑤ 氛围</option>
+      </select>
+    </div>
+    <div class="score-box">分数 <b id="score">0</b></div>
+  </div>
+</header>
+
+<div class="next-group-wrap" id="nextGroupWrap">
+  <div class="ng-label">
+    即将投放 <b>-10 分/换</b><br>
+    <span style="font-size:10px">点此换色+换位置</span>
+  </div>
+  <div class="ng-balls" id="nextGroupBalls"></div>
+</div>
+
+<div class="toolbar">
+  <button class="btn" id="hintBtn">提示</button>
+  <button class="btn" id="undoBtn">撤销</button>
+  <button class="btn" id="pauseBtn">暂停</button>
+  <button class="btn primary" id="restartBtn">重玩</button>
+  <button class="btn" id="rankBtn">排行</button>
+  <button class="btn" id="helpBtn">说明</button>
+</div>
+
+<div class="board-wrap">
+  <div class="board" id="board"></div>
+  <canvas class="path" id="path"></canvas>
+</div>
+
+<div class="overlay hidden" id="pauseOverlay">
+  <div class="modal">
+    <h2>已暂停</h2>
+    <p>当前分数 <b id="pauseScore" style="color:var(--gold)">0</b></p>
+    <div class="btns">
+      <button class="btn primary" onclick="resumeGame()">继续</button>
+      <button class="btn" onclick="restartGame()">重玩</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay hidden" id="gameOverOverlay">
+  <div class="modal">
+    <h2>💔 游戏结束</h2>
+    <p>棋盘已满</p>
+    <p>最终得分</p>
+    <p style="font-size:26px;color:var(--gold);margin:4px 0"><b id="finalScore">0</b></p>
+    <p>输入名字记入排行</p>
+    <input type="text" id="nameInput" maxlength="10" placeholder="名字(最多 10 字)">
+    <div class="btns">
+      <button class="btn primary" onclick="saveScore()">保存</button>
+      <button class="btn" onclick="restartGame()">再玩</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay hidden" id="rankOverlay">
+  <div class="modal">
+    <h2>🏆 排行榜</h2>
+    <ul class="score-list" id="rankList"></ul>
+    <div class="btns">
+      <button class="btn primary" onclick="closeRank()">关闭</button>
+      <button class="btn" onclick="clearRank()">清空</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay hidden" id="helpOverlay">
+  <div class="modal" style="max-width:380px;text-align:left;">
+    <h2 style="text-align:center;">🎮 游戏说明</h2>
+    <div style="font-size:15px;line-height:1.9;color:var(--text);">
+      <p><b style="color:var(--gold);">目标：</b>将 5 个同色彩球连成一条直线（横/竖/斜），消除得分。</p>
+      <p><b style="color:var(--gold);">操作：</b></p>
+      <p>① 点击一个彩球选中（球会跳动）</p>
+      <p>② 再点击一个空格，球就移动过去</p>
+      <p>③ 移动后会投放 3 个新彩球（高亮闪烁）</p>
+      <p><b style="color:var(--gold);">加分：</b>每消除 5 连得 10 分，超出额外加 2 分/个。</p>
+      <p><b style="color:var(--gold);">换组：</b>点击顶栏"即将投放"可替换刚投放的 3 个球颜色，扣 10 分/次。</p>
+      <p><b style="color:var(--gold);">提示：</b>棋盘满了就游戏结束，动动脑子吧！</p>
+    </div>
+    <div class="btns" style="margin-top:12px;">
+      <button class="btn primary" onclick="closeHelp()">知道了</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============ 音频模块(Web Audio API 程序化生成)============
+const Audio = (() => {
+  let ctx = null, masterGain, musicGain, sfxGain;
+  let musicEnabled = true, sfxEnabled = true;
+  let musicTimer = null, melodyIndex = 0;
+  let currentTrack = 0;
+
+  const TRACKS = [
+    { // ① 流行 - 快节奏舞曲,C大调高音区
+      name:'流行', wave:'triangle', attack:0.01, dur:0.9,
+      melody:[
+        {f:523.25,d:0.2},{f:659.25,d:0.2},{f:783.99,d:0.2},{f:1046.50,d:0.2},
+        {f:783.99,d:0.2},{f:659.25,d:0.2},{f:523.25,d:0.4},
+        {f:587.33,d:0.2},{f:698.46,d:0.2},{f:880.00,d:0.2},{f:1046.50,d:0.2},
+        {f:880.00,d:0.2},{f:698.46,d:0.2},{f:587.33,d:0.4},
+        {f:523.25,d:0.15},{f:659.25,d:0.15},{f:783.99,d:0.15},{f:659.25,d:0.15},
+        {f:523.25,d:0.15},{f:440.00,d:0.15},{f:523.25,d:0.15},{f:659.25,d:0.15},
+        {f:587.33,d:0.2},{f:523.25,d:0.2},{f:493.88,d:0.2},{f:523.25,d:0.2},
+        {f:392.00,d:0.3},{f:440.00,d:0.3},{f:523.25,d:0.5},
+      ],
+      harmony:'pop',
+    },
+    { // ② R&B - 蓝调灵魂,降三级降五级,中音区
+      name:'R&B', wave:'sine', attack:0.08, dur:0.85,
+      melody:[
+        {f:349.23,d:0.4},{f:415.30,d:0.4},{f:466.16,d:0.4},{f:523.25,d:0.4},
+        {f:466.16,d:0.4},{f:415.30,d:0.4},{f:349.23,d:0.8},
+        {f:311.13,d:0.4},{f:349.23,d:0.4},{f:415.30,d:0.4},{f:466.16,d:0.4},
+        {f:523.25,d:0.4},{f:466.16,d:0.4},{f:415.30,d:0.8},
+        {f:261.63,d:0.5},{f:329.63,d:0.5},{f:392.00,d:0.5},{f:466.16,d:0.5},
+        {f:523.25,d:0.4},{f:466.16,d:0.4},{f:415.30,d:0.4},{f:349.23,d:0.4},
+        {f:311.13,d:0.4},{f:261.63,d:0.8},
+      ],
+      harmony:'rnb',
+    },
+    { // ③ 电音 - 合成器,超大跳音,方波
+      name:'电音', wave:'square', attack:0.002, dur:0.7,
+      melody:[
+        {f:130.81,d:0.1},{f:523.25,d:0.1},{f:130.81,d:0.1},{f:523.25,d:0.1},
+        {f:146.83,d:0.1},{f:587.33,d:0.1},{f:146.83,d:0.1},{f:587.33,d:0.1},
+        {f:164.81,d:0.1},{f:659.25,d:0.1},{f:164.81,d:0.1},{f:659.25,d:0.1},
+        {f:196.00,d:0.1},{f:783.99,d:0.1},{f:196.00,d:0.1},{f:783.99,d:0.1},
+        {f:220.00,d:0.08},{f:523.25,d:0.08},{f:659.25,d:0.08},{f:587.33,d:0.08},
+        {f:440.00,d:0.08},{f:329.63,d:0.08},{f:261.63,d:0.08},{f:196.00,d:0.16},
+      ],
+      harmony:'electro',
+    },
+    { // ④ 民谣 - 五声音阶,慢速,三角波
+      name:'民谣', wave:'triangle', attack:0.1, dur:0.85,
+      melody:[
+        {f:261.63,d:0.6},{f:329.63,d:0.6},{f:392.00,d:0.6},{f:440.00,d:0.6},
+        {f:523.25,d:0.6},{f:440.00,d:0.6},{f:392.00,d:0.6},{f:329.63,d:0.6},
+        {f:293.66,d:0.6},{f:329.63,d:0.6},{f:392.00,d:0.8},{f:329.63,d:0.8},
+        {f:261.63,d:1.0},{f:293.66,d:0.6},{f:329.63,d:0.6},{f:392.00,d:0.6},
+        {f:440.00,d:0.6},{f:392.00,d:0.6},{f:329.63,d:0.6},{f:261.63,d:1.0},
+      ],
+      harmony:'folk',
+    },
+    { // ⑤ 氛围 - 超慢速,低八度,正弦波
+      name:'氛围', wave:'sine', attack:0.6, dur:0.95,
+      melody:[
+        {f:130.81,d:1.5},{f:164.81,d:1.5},{f:196.00,d:1.5},{f:220.00,d:1.5},
+        {f:261.63,d:1.5},{f:220.00,d:1.5},{f:196.00,d:2.0},
+        {f:110.00,d:1.5},{f:146.83,d:1.5},{f:164.81,d:1.5},{f:196.00,d:1.5},
+        {f:220.00,d:1.5},{f:196.00,d:1.5},{f:164.81,d:2.0},
+        {f:98.00,d:1.5},{f:130.81,d:1.5},{f:164.81,d:1.5},{f:196.00,d:1.5},
+      ],
+      harmony:'ambient',
+    },
+  ];
+
+  function init(){
+    if (ctx) return;
+    try {
+      ctx = new (window.AudioContext || window.webkitAudioContext)();
+      masterGain = ctx.createGain(); masterGain.gain.value = 1; masterGain.connect(ctx.destination);
+      musicGain = ctx.createGain(); musicGain.gain.value = 0.1; musicGain.connect(masterGain);
+      sfxGain = ctx.createGain(); sfxGain.gain.value = 0.5; sfxGain.connect(masterGain);
+    } catch(e){ console.warn('AudioContext init failed', e); }
+  }
+  function tone(freq, dur, type='sine', dest=null, vol=1, attack=0.02){
+    if (!ctx) return;
+    const osc = ctx.createOscillator(), g = ctx.createGain();
+    osc.type = type; osc.frequency.value = freq;
+    const t = ctx.currentTime;
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol, t + attack);
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    osc.connect(g); g.connect(dest || sfxGain);
+    osc.start(t); osc.stop(t + dur);
+  }
+  function sfxClick(){ if (!sfxEnabled) return; init(); tone(800, 0.05, 'square', null, 0.18); }
+  function sfxMatch(){
+    if (!sfxEnabled) return; init();
+    tone(660, 0.12, 'sine', null, 0.5);
+    setTimeout(() => tone(880, 0.18, 'sine', null, 0.5), 70);
+    setTimeout(() => tone(1320, 0.2, 'sine', null, 0.3), 140);
+  }
+  function sfxError(){ if (!sfxEnabled) return; init(); tone(220, 0.18, 'sawtooth', null, 0.3); }
+  function sfxLevelUp(){
+    if (!sfxEnabled) return; init();
+    [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => tone(f, 0.25, 'triangle', null, 0.5), i * 90));
+  }
+  function sfxDead(){
+    if (!sfxEnabled) return; init();
+    [440, 330, 220].forEach((f, i) => setTimeout(() => tone(f, 0.2, 'sawtooth', null, 0.3), i * 100));
+  }
+  function startMusic(){
+    if (!musicEnabled || musicTimer) return;
+    init();
+    if (!ctx) return;
+    const track = TRACKS[currentTrack];
+    function next(){
+      if (!musicEnabled || !ctx){ musicTimer = null; return; }
+      const n = track.melody[melodyIndex % track.melody.length];
+      tone(n.f, n.d * track.dur, track.wave, musicGain, 1.0, track.attack);
+      const h = track.harmony;
+      if (h === 'pop'){
+        if (melodyIndex % 2 === 0) tone(n.f * 2, n.d * 0.5, 'sine', musicGain, 0.25, track.attack);
+        if (melodyIndex % 4 === 0) tone(n.f / 2, n.d * 0.5, 'sine', musicGain, 0.15, track.attack);
+      } else if (h === 'rnb'){
+        if (melodyIndex % 2 === 0) tone(n.f / 2, n.d * track.dur, 'sine', musicGain, 0.3, track.attack);
+        if (melodyIndex % 4 === 2) tone(n.f * 1.5, n.d * 0.4, 'sine', musicGain, 0.15, track.attack);
+      } else if (h === 'electro'){
+        if (melodyIndex % 2 === 0) tone(n.f * 2, n.d * 0.3, 'square', musicGain, 0.12, 0.005);
+      } else if (h === 'folk'){
+        if (melodyIndex % 3 === 0) tone(n.f / 2, n.d * track.dur, 'triangle', musicGain, 0.2, track.attack);
+      } else if (h === 'ambient'){
+        tone(n.f / 2, n.d * 1.2, 'sine', musicGain, 0.35, track.attack);
+        if (melodyIndex % 2 === 0) tone(n.f * 2, n.d * 0.6, 'sine', musicGain, 0.1, track.attack);
+      }
+      melodyIndex++;
+      musicTimer = setTimeout(next, n.d * 1000);
+    }
+    next();
+  }
+  function stopMusic(){ if (musicTimer){ clearTimeout(musicTimer); musicTimer = null; } }
+  function setTrack(idx){
+    currentTrack = idx;
+    melodyIndex = 0;
+    if (musicEnabled){ stopMusic(); startMusic(); }
+  }
+  function toggleMusic(){
+    musicEnabled = !musicEnabled;
+    if (musicEnabled) startMusic(); else stopMusic();
+    return musicEnabled;
+  }
+  return { init, sfxClick, sfxMatch, sfxError, sfxLevelUp, sfxDead,
+    startMusic, stopMusic, setTrack, toggleMusic, isMusicOn: () => musicEnabled,
+    getTrackName: () => TRACKS[currentTrack].name };
+})();
+
+// ============ 配置 ============
+const COLS = 9, ROWS = 9, TYPES = 5;
+const INIT_BALLS = 5;          // 开局球数
+const NEXT_GROUP_SIZE = 3;     // 每次投放一组 3 个
+const LINE_LEN = 5;            // 几连消除
+const SCORE_PER_LINE = 10;    // 每组 5 连得分(=换组扣分)
+
+// ============ 状态 ============
+let grid;            // (ROWS+2) x (COLS+2),0 空,1..TYPES 球
+let nextGroup;       // [c1..c5] 下一组颜色
+let selected = null; // {x, y}
+let score = 0;
+let paused = false;
+let gameOver = false;
+let undoStack = null;
+let lastDropped = null;  // 最近一次投放的球位置[[x,y],...],供顶栏换组使用
+let newDropped = null;   // 最近一次新投放/换组的位置,用于高亮
+
+const boardEl = document.getElementById('board');
+const pathCanvas = document.getElementById('path');
+const ctx = pathCanvas.getContext('2d');
+
+// 复用 BFS 数组,减少 GC 开销
+const _visited = Array.from({length: ROWS+2}, () => Array(COLS+2).fill(false));
+const _parent = Array.from({length: ROWS+2}, () => Array(COLS+2).fill(null));
+
+// ============ 工具 ============
+function shuffle(arr){
+  for (let i = arr.length-1; i > 0; i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+function randomColor(){ return 1 + Math.floor(Math.random() * TYPES); }
+function generateNextGroup(){
+  return Array.from({length: NEXT_GROUP_SIZE}, randomColor);
+}
+function countEmpty(){
+  let n = 0;
+  for (let y = 1; y <= ROWS; y++)
+    for (let x = 1; x <= COLS; x++)
+      if (grid[y][x] === 0) n++;
+  return n;
+}
+
+// ============ 初始化 ============
+function initGame(){
+  grid = Array.from({length: ROWS+2}, () => Array(COLS+2).fill(0));
+  // 开局随机放 5 个球
+  dropBallsRandom(INIT_BALLS);
+  nextGroup = generateNextGroup();
+  score = 0;
+  selected = null;
+  paused = false;
+  gameOver = false;
+  undoStack = null;
+  lastDropped = null;
+  newDropped = null;
+  render();
+  renderNextGroup();
+  updateStats();
+}
+
+function dropBallsRandom(k){
+  const empty = [];
+  for (let y = 1; y <= ROWS; y++)
+    for (let x = 1; x <= COLS; x++)
+      if (grid[y][x] === 0) empty.push([x, y]);
+  shuffle(empty);
+  for (let i = 0; i < k && i < empty.length; i++){
+    grid[empty[i][1]][empty[i][0]] = randomColor();
+  }
+}
+
+// ============ 渲染 ============
+function render(){
+  const frag = document.createDocumentFragment();
+  for (let y = 1; y <= ROWS; y++){
+    for (let x = 1; x <= COLS; x++){
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      cell.dataset.x = x; cell.dataset.y = y;
+      const v = grid[y][x];
+      if (v === 0){
+        cell.classList.add('empty');
+      } else {
+        const ball = document.createElement('div');
+        ball.className = 'ball c' + v;
+        if (selected && selected.x === x && selected.y === y){
+          ball.classList.add('selected');
+        }
+        if (newDropped && newDropped.some(([nx, ny]) => nx === x && ny === y)){
+          ball.classList.add('new-ball');
+        }
+        cell.appendChild(ball);
+      }
+      cell.addEventListener('click', onCellClick);
+      frag.appendChild(cell);
+    }
+  }
+  boardEl.innerHTML = '';
+  boardEl.appendChild(frag);
+  resizeCanvas();
+}
+
+function renderNextGroup(){
+  const el = document.getElementById('nextGroupBalls');
+  el.innerHTML = '';
+  nextGroup.forEach(c => {
+    const b = document.createElement('div');
+    b.className = 'ng-ball c' + c;
+    el.appendChild(b);
+  });
+}
+
+function resizeCanvas(){
+  const r = boardEl.getBoundingClientRect();
+  pathCanvas.width = r.width;
+  pathCanvas.height = r.height;
+}
+window.addEventListener('resize', resizeCanvas);
+window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 200));
+
+function updateStats(){
+  document.getElementById('score').textContent = score;
+  document.getElementById('undoBtn').disabled = undoStack === null;
+  const canSwap = score >= SCORE_PER_LINE && lastDropped && lastDropped.length > 0;
+  document.getElementById('nextGroupWrap').classList.toggle('disabled', !canSwap);
+}
+
+// ============ 点击交互 ============
+function onCellClick(e){
+  if (paused || gameOver) return;
+  const x = +e.currentTarget.dataset.x;
+  const y = +e.currentTarget.dataset.y;
+  Audio.init(); Audio.startMusic();
+
+  if (grid[y][x] !== 0){
+    // 点球:选中(若已选同一颗,取消)
+    if (selected && selected.x === x && selected.y === y){
+      selected = null;
+    } else {
+      Audio.sfxClick();
+      selected = {x, y};
+    }
+    render();
+    return;
+  }
+  // 点空格:若有选中,移动;否则忽略
+  if (selected){
+    moveBall(selected.x, selected.y, x, y);
+  }
+}
+
+function moveBall(sx, sy, tx, ty){
+  const path = findPath(sx, sy, tx, ty);
+  if (!path){
+    Audio.sfxError();
+    toast('无法到达,试试别的位置');
+    return;
+  }
+  // 清除上一次的高亮标记(新投放即将到来)
+  newDropped = null;
+
+  // 保存撤销(仅一步)
+  undoStack = snapshotState();
+
+  // 画路径
+  drawMovePath(path);
+  // 移动
+  const color = grid[sy][sx];
+  grid[sy][sx] = 0;
+  grid[ty][tx] = color;
+  selected = null;
+
+  // 检查 5 连(移动后)
+  const toClear = checkLinesAt(tx, ty);
+  if (toClear.length > 0){
+    Audio.sfxMatch();
+    toClear.forEach(([x, y]) => grid[y][x] = 0);
+    const groups = Math.floor(toClear.length / LINE_LEN);
+    const extra = toClear.length - groups * LINE_LEN;
+    score += groups * SCORE_PER_LINE + extra * 2;
+    // 消除后立即渲染,让用户看到消除效果
+    render();
+    updateStats();
+  }
+
+  // 无论是否消除,都投放下一组 3 个球
+  setTimeout(() => {
+    const placed = dropNextGroup();
+    lastDropped = placed;
+    newDropped = placed;  // 标记新投放位置用于高亮,持续到下一次移动
+    // 投放后检测每个新球是否触发 5 连
+    let allClear = new Set();
+    placed.forEach(([px, py]) => {
+      const lc = checkLinesAt(px, py);
+      lc.forEach(c => allClear.add(c[0] + ',' + c[1]));
+    });
+    if (allClear.size > 0){
+      Audio.sfxMatch();
+      allClear.forEach(s => {
+        const [x, y] = s.split(',').map(Number);
+        grid[y][x] = 0;
+      });
+      const cnt = allClear.size;
+      const groups = Math.floor(cnt / LINE_LEN);
+      const extra = cnt - groups * LINE_LEN;
+      score += groups * SCORE_PER_LINE + extra * 2;
+      // 移除被消除的高亮标记
+      newDropped = newDropped.filter(([nx, ny]) => !allClear.has(nx + ',' + ny));
+    }
+    nextGroup = generateNextGroup();
+    render();
+    renderNextGroup();
+    updateStats();
+    // 游戏结束:棋盘满
+    if (countEmpty() === 0){
+      gameOver = true;
+      Audio.sfxDead();
+      setTimeout(showGameOver, 300);
+    }
+  }, 120);
+}
+
+function dropNextGroup(){
+  const empty = [];
+  for (let y = 1; y <= ROWS; y++)
+    for (let x = 1; x <= COLS; x++)
+      if (grid[y][x] === 0) empty.push([x, y]);
+  shuffle(empty);
+  const placed = [];
+  for (let i = 0; i < NEXT_GROUP_SIZE && i < empty.length; i++){
+    grid[empty[i][1]][empty[i][0]] = nextGroup[i];
+    placed.push(empty[i]);
+  }
+  return placed;
+}
+
+// ============ BFS 路径 ============
+function findPath(sx, sy, tx, ty){
+  if (sx === tx && sy === ty) return [[sx, sy]];
+  // 复用数组,清零
+  for (let i = 1; i <= ROWS; i++){
+    for (let j = 1; j <= COLS; j++){
+      _visited[i][j] = false;
+      _parent[i][j] = null;
+    }
+  }
+  const queue = [[sx, sy]];
+  let qIdx = 0;
+  _visited[sy][sx] = true;
+  const dirs = [[1,0],[-1,0],[0,1],[0,-1]];
+  while (qIdx < queue.length){
+    const [x, y] = queue[qIdx++];
+    for (const [dx, dy] of dirs){
+      const nx = x + dx, ny = y + dy;
+      if (nx < 1 || nx > COLS || ny < 1 || ny > ROWS) continue;
+      if (_visited[ny][nx]) continue;
+      if (grid[ny][nx] !== 0 && !(nx === tx && ny === ty)) continue;
+      _visited[ny][nx] = true;
+      _parent[ny][nx] = [x, y];
+      if (nx === tx && ny === ty){
+        const path = [];
+        let cur = [tx, ty];
+        while (cur){
+          path.unshift(cur);
+          cur = _parent[cur[1]][cur[0]];
+        }
+        return path;
+      }
+      queue.push([nx, ny]);
+    }
+  }
+  return null;
+}
+
+// ============ 5 连检测 ============
+function checkLinesAt(x, y){
+  if (grid[y][x] === 0) return [];
+  const c = grid[y][x];
+  const dirs = [[1,0],[0,1],[1,1],[1,-1]];
+  const toClear = new Set();
+  for (const [dx, dy] of dirs){
+    const line = [[x, y]];
+    let nx = x + dx, ny = y + dy;
+    while (nx >= 1 && nx <= COLS && ny >= 1 && ny <= ROWS && grid[ny][nx] === c){
+      line.push([nx, ny]);
+      nx += dx; ny += dy;
+    }
+    nx = x - dx; ny = y - dy;
+    while (nx >= 1 && nx <= COLS && ny >= 1 && ny <= ROWS && grid[ny][nx] === c){
+      line.unshift([nx, ny]);
+      nx -= dx; ny -= dy;
+    }
+    if (line.length >= LINE_LEN){
+      line.forEach(([px, py]) => toClear.add(px + ',' + py));
+    }
+  }
+  return Array.from(toClear).map(s => s.split(',').map(Number));
+}
+
+// ============ 路径绘制 ============
+function drawMovePath(path){
+  resizeCanvas();
+  ctx.clearRect(0, 0, pathCanvas.width, pathCanvas.height);
+  const w = pathCanvas.width, h = pathCanvas.height;
+  const cellW = w / COLS, cellH = h / ROWS;
+  ctx.strokeStyle = '#ffd166';
+  ctx.lineWidth = 3;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.shadowColor = '#ff9800';
+  ctx.shadowBlur = 10;
+  ctx.beginPath();
+  path.forEach(([vx, vy], i) => {
+    const px = (vx - 0.5) * cellW;
+    const py = (vy - 0.5) * cellH;
+    if (i === 0) ctx.moveTo(px, py);
+    else ctx.lineTo(px, py);
+  });
+  ctx.stroke();
+  setTimeout(() => ctx.clearRect(0, 0, pathCanvas.width, pathCanvas.height), 350);
+}
+
+// ============ 顶栏预览组点击:换最近投放的球 ============
+function swapLastDropped(){
+  if (paused || gameOver) return;
+  if (!lastDropped || lastDropped.length === 0){
+    Audio.sfxError();
+    toast('暂无可换的球,先移动一步');
+    return;
+  }
+  // 仅保留仍被占用的位置(球未被消除/移动)
+  const valid = lastDropped.filter(([x, y]) => grid[y][x] !== 0);
+  if (valid.length === 0){
+    Audio.sfxError();
+    toast('最近投放的球已全部消除');
+    return;
+  }
+  if (score < SCORE_PER_LINE){
+    Audio.sfxError();
+    toast('积分不足,无法换组');
+    return;
+  }
+  // 需要的空位数 = valid 数量(旧位置要释放) + valid 数量(新位置要占用)
+  // 旧位置会被释放,所以实际只需要 valid 个空位
+  const empty = [];
+  for (let y = 1; y <= ROWS; y++)
+    for (let x = 1; x <= COLS; x++)
+      if (grid[y][x] === 0) empty.push([x, y]);
+  if (empty.length < valid.length){
+    Audio.sfxError();
+    toast('空位不足,无法换位置');
+    return;
+  }
+  Audio.sfxClick();
+  score -= SCORE_PER_LINE;
+  // 清除旧位置的球
+  valid.forEach(([x, y]) => { grid[y][x] = 0; });
+  // 打乱空位,分配新位置
+  shuffle(empty);
+  const newPlaced = [];
+  for (let i = 0; i < valid.length; i++){
+    const [nx, ny] = empty[i];
+    grid[ny][nx] = nextGroup[i];
+    newPlaced.push([nx, ny]);
+  }
+  newDropped = newPlaced;
+  lastDropped = newPlaced;
+  // 检查换组后是否触发 5 连
+  let allClear = new Set();
+  newPlaced.forEach(([x, y]) => {
+    const lc = checkLinesAt(x, y);
+    lc.forEach(c => allClear.add(c[0] + ',' + c[1]));
+  });
+  if (allClear.size > 0){
+    Audio.sfxMatch();
+    allClear.forEach(s => {
+      const [x, y] = s.split(',').map(Number);
+      grid[y][x] = 0;
+    });
+    const cnt = allClear.size;
+    const groups = Math.floor(cnt / LINE_LEN);
+    const extra = cnt - groups * LINE_LEN;
+    score += groups * SCORE_PER_LINE + extra * 2;
+    newDropped = newDropped.filter(([nx, ny]) => !allClear.has(nx + ',' + ny));
+    lastDropped = lastDropped.filter(([nx, ny]) => !allClear.has(nx + ',' + ny));
+  }
+  // 生成新预览组,供下次投放或下次换组使用
+  nextGroup = generateNextGroup();
+  render();
+  renderNextGroup();
+  updateStats();
+  toast(`换组+换位置,扣 ${SCORE_PER_LINE} 分`);
+}
+document.getElementById('nextGroupWrap').onclick = swapLastDropped;
+
+// ============ 提示(高亮"再放一个就 5 连"的位置)============
+function findHints(){
+  const hints = [];
+  for (let y = 1; y <= ROWS; y++){
+    for (let x = 1; x <= COLS; x++){
+      if (grid[y][x] !== 0) continue;
+      for (let c = 1; c <= TYPES; c++){
+        grid[y][x] = c;
+        const lines = checkLinesAt(x, y);
+        grid[y][x] = 0;
+        if (lines.length >= LINE_LEN){
+          hints.push([x, y, c]);
+          break;
+        }
+      }
+    }
+  }
+  return hints;
+}
+document.getElementById('hintBtn').onclick = () => {
+  if (paused || gameOver) return;
+  const hints = findHints();
+  if (hints.length === 0){
+    toast('暂无可成 5 连的位置');
+    return;
+  }
+  Audio.sfxClick();
+  // 高亮第一个候选位置
+  const [hx, hy, hc] = hints[0];
+  boardEl.querySelectorAll('.cell').forEach(el => {
+    const x = +el.dataset.x, y = +el.dataset.y;
+    if (x === hx && y === hy){
+      el.classList.add('target-hint');
+      setTimeout(() => el.classList.remove('target-hint'), 1500);
+    }
+  });
+  toast(`提示:在 (列${hx}, 行${hy}) 放置可成 5 连`);
+};
+
+// ============ 撤销 ============
+function snapshotState(){
+  return {
+    grid: grid.map(row => row.slice()),
+    nextGroup: nextGroup.slice(),
+    score,
+    selected: selected ? {...selected} : null,
+    lastDropped: lastDropped ? lastDropped.map(p => p.slice()) : null,
+    newDropped: newDropped ? newDropped.map(p => p.slice()) : null,
+  };
+}
+function undo(){
+  if (paused || gameOver) return;
+  if (undoStack === null){
+    toast('无可撤销的操作');
+    return;
+  }
+  const s = undoStack;
+  undoStack = null;
+  grid = s.grid;
+  nextGroup = s.nextGroup;
+  score = s.score;
+  selected = null;
+  lastDropped = s.lastDropped;
+  newDropped = s.newDropped;
+  render();
+  renderNextGroup();
+  updateStats();
+  toast('已撤销上一步');
+}
+document.getElementById('undoBtn').onclick = undo;
+
+// ============ 暂停 / 重玩 ============
+document.getElementById('pauseBtn').onclick = () => {
+  if (gameOver) return;
+  paused = true;
+  document.getElementById('pauseScore').textContent = score;
+  document.getElementById('pauseOverlay').classList.remove('hidden');
+};
+function resumeGame(){
+  paused = false;
+  document.getElementById('pauseOverlay').classList.add('hidden');
+}
+document.getElementById('restartBtn').onclick = restartGame;
+function restartGame(){
+  ['pauseOverlay','gameOverOverlay','rankOverlay'].forEach(id =>
+    document.getElementById(id).classList.add('hidden'));
+  initGame();
+}
+
+// ============ 游戏结束 ============
+function showGameOver(){
+  document.getElementById('finalScore').textContent = score;
+  document.getElementById('nameInput').value = '';
+  document.getElementById('gameOverOverlay').classList.remove('hidden');
+}
+function saveScore(){
+  const name = (document.getElementById('nameInput').value.trim() || '匿名玩家').slice(0, 10);
+  const list = JSON.parse(localStorage.getItem('colorlines_rank') || '[]');
+  list.push({name, score, date: new Date().toLocaleDateString('zh-CN')});
+  list.sort((a, b) => b.score - a.score);
+  localStorage.setItem('colorlines_rank', JSON.stringify(list.slice(0, 5)));
+  document.getElementById('gameOverOverlay').classList.add('hidden');
+  renderRank();
+  document.getElementById('rankOverlay').classList.remove('hidden');
+}
+
+// ============ 排行榜 ============
+document.getElementById('rankBtn').onclick = () => {
+  renderRank();
+  document.getElementById('rankOverlay').classList.remove('hidden');
+};
+function closeRank(){
+  document.getElementById('rankOverlay').classList.add('hidden');
+}
+document.getElementById('helpBtn').onclick = () => {
+  document.getElementById('helpOverlay').classList.remove('hidden');
+};
+function closeHelp(){
+  document.getElementById('helpOverlay').classList.add('hidden');
+}
+function clearRank(){
+  if (confirm('确定清空所有排行记录?')){
+    localStorage.removeItem('colorlines_rank');
+    renderRank();
+  }
+}
+function renderRank(){
+  const list = JSON.parse(localStorage.getItem('colorlines_rank') || '[]');
+  const ul = document.getElementById('rankList');
+  ul.innerHTML = '';
+  if (list.length === 0){
+    ul.innerHTML = '<li style="color:#666;justify-content:center">暂无记录</li>';
+    return;
+  }
+  list.forEach((r, i) => {
+    const li = document.createElement('li');
+    li.innerHTML = '<span>' + (i+1) + '. ' + escapeHtml(r.name) +
+      ' <span style="color:#666;font-size:12px">(' + r.date + ')</span></span><b>' + r.score + '</b>';
+    ul.appendChild(li);
+  });
+}
+function escapeHtml(s){
+  return String(s).replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// ============ 音乐按钮 ============
+document.getElementById('musicBtn').onclick = () => {
+  Audio.init();
+  const on = Audio.toggleMusic();
+  const btn = document.getElementById('musicBtn');
+  btn.textContent = on ? '🔊' : '🔇';
+  btn.classList.toggle('muted', !on);
+  toast(on ? `音乐:${Audio.getTrackName()}` : '音乐已关闭');
+};
+// 音乐选择下拉
+document.getElementById('musicSelect').onchange = (e) => {
+  const idx = parseInt(e.target.value, 10);
+  Audio.init();
+  Audio.setTrack(idx);
+  if (!Audio.isMusicOn()){
+    // 用户之前关了音乐,切歌时自动开启
+    const btn = document.getElementById('musicBtn');
+    btn.textContent = '🔊';
+    btn.classList.remove('muted');
+  }
+  toast(`已切换:${Audio.getTrackName()}`);
+};
+
+// ============ Toast ============
+let toastTimer;
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 1600);
+}
+
+// ============ 启动 ============
+initGame();
+
+// ============ Service Worker 注册(离线缓存 + 添加到主屏幕)============
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(err => {
+      console.warn('SW 注册失败:', err);
+    });
+  });
+}
+</script>
+</body>
+</html>

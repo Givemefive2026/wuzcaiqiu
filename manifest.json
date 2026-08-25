@@ -1,0 +1,19 @@
+{
+  "name": "五子彩球消消乐",
+  "short_name": "彩球消消乐",
+  "description": "五子彩球消消乐 - 消除类益智小游戏",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1a1a2e",
+  "theme_color": "#00e5ff",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIgMTkyIj4KICA8cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgZmlsbD0iIzFhMWEyZSIvPiAgPGNpcmNsZSBjeD0iNTYiIGN5PSI1NiIgcj0iMjAiIGZpbGw9IiNmZjY1NjYiLz4KICA8Y2lyY2xlIGN4PSIxMzYiIGN5PSI1NiIgcj0iMjAiIGZpbGw9IiNmZjkxMjkiLz4KICA8Y2lyY2xlIGN4PSI1NiIgY3k9IjEzNiIgcj0iMjAiIGZpbGw9IiM1MmM4NzgiLz4KICA8Y2lyY2xlIGN4PSIxMzYiIGN5PSIxMzYiIHI9IjIwIiBmaWxsPSIjNGRhYjciLz4KICA8Y2lyY2xlIGN4PSI5NiIgY3k9Ijk2IiByPSIyMCIgZmlsbD0iI2M3N2RmZiIvPgogIDxyZWN0IHg9IjI0IiB5PSI0IiB3aWR0aD0iMTQ0IiBoZWlnaHQ9IjI4IiBmaWxsPSJ1cmFiaWEoMCwgMCwwLzAwZTVmZiwwLjEpIiByb3VuZGVkPSI0Ii8+CiAgPGN5bGNlIGN4PSI1NiIgY3k9IjE5IiByPSI3IiBmaWxsPSIjMDBlNWZmIi8+CiAgPGN5bGNlIGN4PSI5NiIgY3k9IjE5IiByPSI3IiBmaWxsPSIjNzM0ZGZmIi8+CiAgPGN5bGNlIGN4PSIxMzYiIGN5PSIxOSIgcj0iNyIgZmlsbD0iI2ZmNDA4MSIvPgogIDxyZWN0IHg9IjIgdmlnb3J0PSIwIiB3aWR0aD0iMTg4IiBoZWlnaHQ9IjE4OCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAlMTI3OTZmIiBzdHJva2Utd2lkdGg9IjQiIHJvdW5kZXM9IjEyIi8+Cjwvc3ZnPg==",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
