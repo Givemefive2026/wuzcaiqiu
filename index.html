@@ -47,6 +47,7 @@ header{
   color:#00e5ff;
   text-shadow:0 0 14px rgba(0,229,255,.5);
   font-family:"HarmonyOS Sans SC","Source Han Sans CN","PingFang SC","Hiragino Sans GB","Microsoft YaHei UI",sans-serif;
+  white-space:nowrap;
 }
 .header-right{display:flex;align-items:center;gap:10px;}
 .music-btn{
@@ -102,6 +103,7 @@ header{
     0 2px 4px rgba(0,0,0,.45),
     inset -2px -3px 4px rgba(0,0,0,.3),
     inset 2px 2px 3px rgba(255,255,255,.55);
+  transition:width .25s ease,height .25s ease;
 }
 .ng-ball.small{width:22px;height:22px;}
 
@@ -218,9 +220,18 @@ header{
     inset 3px 4px 6px rgba(255,255,255,.6);
 }
 .cell.empty .ball{display:none;}
+.cell.empty .ball.ghost{display:block;}
 .ball.new-ball{
   animation:newBallPulse 1s ease-in-out infinite;
   transition:none !important;
+}
+/* 幽灵球:即将投放的缩小球,显示在棋盘空位上 */
+.ball.ghost{
+  width:55%;height:55%;
+  opacity:.55;
+  filter:saturate(.7);
+  pointer-events:none;
+  transition:width .25s ease,height .25s ease,opacity .25s ease;
 }
 @keyframes newBallPulse{
   0%,100%{
@@ -331,7 +342,7 @@ header{
 <div class="next-group-wrap" id="nextGroupWrap">
   <div class="ng-label">
     即将投放 <b>-5 分/换</b><br>
-    <span style="font-size:10px">点此换色+换位置</span>
+    <span style="font-size:10px">点此换组/更换预览</span>
   </div>
   <div class="ng-balls" id="nextGroupBalls"></div>
 </div>
@@ -397,8 +408,8 @@ header{
       <p>② 再点击一个空格，球就移动过去</p>
       <p>③ 没有消除时，会投放 3 个新彩球（高亮标记，下次可换组）</p>
       <p><b style="color:var(--gold);">加分：</b>每消除 5 连得 10 分，超出额外加 2 分/个（支持连锁消除）。</p>
-      <p><b style="color:var(--gold);">投放：</b>每次移动后如果没消除，才投放 3 个新球；只要有消除（含连锁）就绝不投放。</p>
-      <p><b style="color:var(--gold);">换组：</b>点击顶栏"即将投放"可替换刚投放的球颜色和位置，空位不足则原地换色。扣 5 分/次（最低 0 分）。</p>
+      <p><b style="color:var(--gold);">投放：</b>棋盘上始终显示 3 个缩小半透明的"幽灵球"，表示即将投放的位置和颜色。移动后没消除→幽灵球变大正式上盘，并出现新的幽灵球；有消除（含连锁）→幽灵球保持缩小不上盘。预览栏显示下一组颜色。</p>
+      <p><b style="color:var(--gold);">换组：</b>点击顶栏"即将投放"：有已投放球时换色+换位置（空位不足原地换色，扣 5 分/次，最低 0 分）；无已投放球时（如消除后）仅更换幽灵球组（免费，不加球）。</p>
       <p><b style="color:var(--gold);">撤销：</b>仅支持撤销上一步操作。</p>
       <p><b style="color:var(--gold);">提示：</b>棋盘满了就游戏结束，动动脑子吧！</p>
     </div>
@@ -583,6 +594,10 @@ let gameOver = false;
 let undoStack = null;
 let lastDropped = null;  // 最近一次投放的球位置[[x,y],...],供顶栏换组使用
 let newDropped = null;   // 最近一次新投放/换组的位置,用于高亮
+let lastMoved = null;    // 最近一次移动的目的地[x,y]
+let canReplace = false;  // (保留)是否可替换
+let ghostPositions = null; // 幽灵球位置[[x,y],...],即将投放但尚未正式上盘的缩小球
+let ghostColors = null;    // 幽灵球颜色[c1,c2,c3]
 
 const boardEl = document.getElementById('board');
 const pathCanvas = document.getElementById('path');
@@ -601,7 +616,16 @@ function shuffle(arr){
 }
 function randomColor(){ return 1 + Math.floor(Math.random() * TYPES); }
 function generateNextGroup(){
-  return Array.from({length: NEXT_GROUP_SIZE}, randomColor);
+  const colors = Array.from({length: NEXT_GROUP_SIZE}, randomColor);
+  // 同时选取幽灵球位置(棋盘上的空位),用于显示即将投放的缩小球
+  ghostColors = colors.slice();
+  const empty = [];
+  for (let y = 1; y <= ROWS; y++)
+    for (let x = 1; x <= COLS; x++)
+      if (grid[y][x] === 0) empty.push([x, y]);
+  shuffle(empty);
+  ghostPositions = empty.slice(0, NEXT_GROUP_SIZE);
+  return colors;
 }
 function countEmpty(){
   let n = 0;
@@ -624,9 +648,72 @@ function initGame(){
   undoStack = null;
   lastDropped = null;
   newDropped = null;
+  lastMoved = null;
+  canReplace = false;
   render();
   renderNextGroup();
   updateStats();
+  saveGameState();
+}
+
+// ============ 游戏状态持久化(防止关闭/后台后丢失) ============
+const STATE_KEY = 'colorlines_state';
+function saveGameState(){
+  try {
+    localStorage.setItem(STATE_KEY, JSON.stringify({
+      grid: grid,
+      nextGroup: nextGroup,
+      score: score,
+      gameOver: gameOver,
+      paused: paused,
+      undoStack: undoStack,
+      lastDropped: lastDropped ? lastDropped.map(p => p.slice()) : null,
+      newDropped: newDropped ? newDropped.map(p => p.slice()) : null,
+      lastMoved: lastMoved ? lastMoved.slice() : null,
+      ghostPositions: ghostPositions ? ghostPositions.map(p => p.slice()) : null,
+      ghostColors: ghostColors ? ghostColors.slice() : null,
+      ts: Date.now()
+    }));
+  } catch(e){}
+}
+function loadGameState(){
+  try {
+    const raw = localStorage.getItem(STATE_KEY);
+    if (!raw) return false;
+    const s = JSON.parse(raw);
+    if (!s || !s.grid) return false;
+    grid = s.grid;
+    nextGroup = s.nextGroup;
+    score = s.score || 0;
+    gameOver = !!s.gameOver;
+    paused = false;                 // 恢复后始终为非暂停
+    undoStack = s.undoStack || null;
+    lastDropped = s.lastDropped || null;
+    newDropped = s.newDropped || null;
+    lastMoved = s.lastMoved || null;
+    ghostPositions = s.ghostPositions || null;
+    ghostColors = s.ghostColors || null;
+    // 旧存档无幽灵球数据时,从当前 nextGroup 补生成
+    if (!ghostPositions && nextGroup){
+      ghostColors = nextGroup.slice();
+      const emp = [];
+      for (let y = 1; y <= ROWS; y++)
+        for (let x = 1; x <= COLS; x++)
+          if (grid[y][x] === 0) emp.push([x, y]);
+      shuffle(emp);
+      ghostPositions = emp.slice(0, NEXT_GROUP_SIZE);
+    }
+    canReplace = false;
+    selected = null;
+    render();
+    renderNextGroup();
+    updateStats();
+    if (gameOver) setTimeout(showGameOver, 300);
+    return true;
+  } catch(e){ return false; }
+}
+function clearGameState(){
+  try { localStorage.removeItem(STATE_KEY); } catch(e){}
 }
 
 function dropBallsRandom(k){
@@ -642,6 +729,14 @@ function dropBallsRandom(k){
 
 // ============ 渲染 ============
 function render(){
+  // 幽灵球映射:位置→颜色
+  const ghostMap = {};
+  if (ghostPositions && ghostColors){
+    for (let i = 0; i < ghostPositions.length; i++){
+      const [gx, gy] = ghostPositions[i];
+      ghostMap[gx+','+gy] = ghostColors[i];
+    }
+  }
   const frag = document.createDocumentFragment();
   for (let y = 1; y <= ROWS; y++){
     for (let x = 1; x <= COLS; x++){
@@ -651,6 +746,13 @@ function render(){
       const v = grid[y][x];
       if (v === 0){
         cell.classList.add('empty');
+        // 幽灵球:该空位是即将投放的位置,显示缩小球
+        const gk = x+','+y;
+        if (ghostMap[gk] !== undefined){
+          const gball = document.createElement('div');
+          gball.className = 'ball ghost c' + ghostMap[gk];
+          cell.appendChild(gball);
+        }
       } else {
         const ball = document.createElement('div');
         ball.className = 'ball c' + v;
@@ -692,8 +794,8 @@ window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 200)
 function updateStats(){
   document.getElementById('score').textContent = score;
   document.getElementById('undoBtn').disabled = undoStack === null;
-  // 换组允许扣到负分,所以只要有最近投放就允许换组
-  const canSwap = lastDropped && lastDropped.length > 0;
+  // 换组:有已投放球时可换色+换位置;无则可更换待投放组(预览)。只要移动过就允许
+  const canSwap = (lastDropped && lastDropped.length > 0) || lastMoved !== null;
   document.getElementById('nextGroupWrap').classList.toggle('disabled', !canSwap);
 }
 
@@ -721,6 +823,41 @@ function onCellClick(e){
   }
 }
 
+// 更换待投放组(预览+幽灵球):生成新的一组,不加球。顶栏点击触发(无已投放球时)。
+function replacePreviewGroup(){
+  nextGroup = generateNextGroup();  // 同时生成新幽灵球位置
+  render();                          // 刷新棋盘上的缩小幽灵球
+  renderNextGroup();
+  Audio.sfxClick();
+  toast('已更换待投放组');
+  saveGameState();
+}
+
+// 链式消除:从起始格开始,反复扫描8邻格,收集所有可达的5连成员(最多20轮)
+function chainClear(startSet){
+  const totalCleared = new Set(startSet.map(([x,y]) => x+','+y));
+  let changed = true;
+  let loopGuard = 0;
+  while (changed && loopGuard < 20){
+    changed = false; loopGuard++;
+    const scan = Array.from(totalCleared).map(s => s.split(',').map(Number));
+    for (const [cx, cy] of scan){
+      const dirs = [[1,0],[0,1],[1,1],[1,-1],[-1,0],[0,-1],[-1,-1],[-1,1]];
+      for (const [dx, dy] of dirs){
+        const nx = cx + dx, ny = cy + dy;
+        if (nx<1||nx>COLS||ny<1||ny>ROWS||grid[ny][nx]===0) continue;
+        const key = nx+','+ny;
+        if (totalCleared.has(key)) continue;
+        const lc = checkLinesAt(nx, ny);
+        if (lc.length >= LINE_LEN){
+          lc.forEach(([lx,ly]) => { const k=lx+','+ly; if(!totalCleared.has(k)){totalCleared.add(k); changed=true;} });
+        }
+      }
+    }
+  }
+  return Array.from(totalCleared).map(s => s.split(',').map(Number));
+}
+
 function moveBall(sx, sy, tx, ty){
   const path = findPath(sx, sy, tx, ty);
   if (!path){
@@ -730,6 +867,7 @@ function moveBall(sx, sy, tx, ty){
   }
   // 清除上一次的高亮标记(新投放即将到来)
   newDropped = null;
+  canReplace = false;  // 新移动开始,关闭替换窗口
 
   // 保存撤销(仅一步)
   undoStack = snapshotState();
@@ -741,32 +879,7 @@ function moveBall(sx, sy, tx, ty){
   grid[sy][sx] = 0;
   grid[ty][tx] = color;
   selected = null;
-
-  // 链式消除循环:检查所有被消除位置的邻居,直到没有新的 5 连
-  function chainClear(startSet){
-    const totalCleared = new Set(startSet.map(([x,y]) => x+','+y));
-    let changed = true;
-    let loopGuard = 0;
-    while (changed && loopGuard < 20){
-      changed = false; loopGuard++;
-      const scan = Array.from(totalCleared).map(s => s.split(',').map(Number));
-      for (const [cx, cy] of scan){
-        // 扫描该球 4 方向邻格,看清除后是否形成新的 5 连
-        const dirs = [[1,0],[0,1],[1,1],[1,-1],[-1,0],[0,-1],[-1,-1],[-1,1]];
-        for (const [dx, dy] of dirs){
-          const nx = cx + dx, ny = cy + dy;
-          if (nx<1||nx>COLS||ny<1||ny>ROWS||grid[ny][nx]===0) continue;
-          const key = nx+','+ny;
-          if (totalCleared.has(key)) continue;
-          const lc = checkLinesAt(nx, ny);
-          if (lc.length >= LINE_LEN){
-            lc.forEach(([lx,ly]) => { const k=lx+','+ly; if(!totalCleared.has(k)){totalCleared.add(k); changed=true;} });
-          }
-        }
-      }
-    }
-    return Array.from(totalCleared).map(s => s.split(',').map(Number));
-  }
+  lastMoved = [tx, ty];  // 记录本次移动的目的地,供替换投放球使用
 
   // 检查 5 连(移动后)
   let toClear = checkLinesAt(tx, ty);
@@ -790,13 +903,39 @@ function moveBall(sx, sy, tx, ty){
         Audio.sfxDead();
         setTimeout(showGameOver, 300);
       }
+      saveGameState();
     }, 120);
     return;
   }
 
-  // 走到这里:移动没有消除,必须投放下一组 3 个球
+  // 走到这里:移动没有消除,幽灵球正式上盘(从缩小变为正常大小)
   setTimeout(() => {
-    const placed = dropNextGroup();
+    // 激活幽灵球:将缩小的预投放球变为正式球(写入 grid)
+    const placed = [];
+    if (ghostPositions && ghostColors){
+      for (let i = 0; i < ghostPositions.length && i < ghostColors.length; i++){
+        let [gx, gy] = ghostPositions[i];
+        // 该位置已被占用(用户移动到此),另选空位
+        if (grid[gy][gx] !== 0){
+          const emp = [];
+          for (let yy = 1; yy <= ROWS; yy++)
+            for (let xx = 1; xx <= COLS; xx++)
+              if (grid[yy][xx] === 0) emp.push([xx, yy]);
+          if (emp.length === 0) break;
+          shuffle(emp);
+          [gx, gy] = emp[0];
+        }
+        grid[gy][gx] = ghostColors[i];
+        placed.push([gx, gy]);
+      }
+      ghostPositions = null;
+      ghostColors = null;
+    }
+    if (placed.length === 0){
+      // 兜底:无幽灵球,随机投放
+      const fb = dropNextGroup();
+      fb.forEach(p => placed.push(p));
+    }
     lastDropped = placed;
     newDropped = placed;
 
@@ -844,7 +983,7 @@ function moveBall(sx, sy, tx, ty){
       newDropped = newDropped.filter(([nx, ny]) => !dropClearedTotal.has(nx + ',' + ny));
       lastDropped = lastDropped.filter(([nx, ny]) => !dropClearedTotal.has(nx + ',' + ny));
     }
-    nextGroup = generateNextGroup();
+    nextGroup = generateNextGroup();  // 生成新预览组+新幽灵球
     render();
     renderNextGroup();
     updateStats();
@@ -854,6 +993,7 @@ function moveBall(sx, sy, tx, ty){
       Audio.sfxDead();
       setTimeout(showGameOver, 300);
     }
+    saveGameState();
   }, 120);
 }
 
@@ -960,16 +1100,16 @@ function drawMovePath(path){
 // ============ 顶栏预览组点击:换最近投放的球 ============
 function swapLastDropped(){
   if (paused || gameOver) return;
+  // 无已投放球(如消除后):仅更换待投放组(预览),免费,不加球
   if (!lastDropped || lastDropped.length === 0){
-    Audio.sfxError();
-    toast('暂无可换的球,先移动一步');
+    replacePreviewGroup();
     return;
   }
   // 仅保留仍被占用的位置(球未被消除/移动)
   const valid = lastDropped.filter(([x, y]) => grid[y][x] !== 0);
   if (valid.length === 0){
-    Audio.sfxError();
-    toast('最近投放的球已全部消除');
+    // 已投放球已全部消除,改为仅更换预览组
+    replacePreviewGroup();
     return;
   }
   // 收集空位
@@ -1041,6 +1181,7 @@ function swapLastDropped(){
   render();
   renderNextGroup();
   updateStats();
+  saveGameState();
 }
 function bind(id, evt, fn){ const el = document.getElementById(id); if(el) el[evt] = fn; }
 bind('nextGroupWrap', 'onclick', swapLastDropped);
@@ -1098,6 +1239,8 @@ function snapshotState(){
     selected: selected ? {...selected} : null,
     lastDropped: lastDropped ? lastDropped.map(p => p.slice()) : null,
     newDropped: newDropped ? newDropped.map(p => p.slice()) : null,
+    ghostPositions: ghostPositions ? ghostPositions.map(p => p.slice()) : null,
+    ghostColors: ghostColors ? ghostColors.slice() : null,
   };
 }
 function undo(){
@@ -1114,10 +1257,13 @@ function undo(){
   selected = null;
   lastDropped = s.lastDropped;
   newDropped = s.newDropped;
+  ghostPositions = s.ghostPositions || null;
+  ghostColors = s.ghostColors || null;
   render();
   renderNextGroup();
   updateStats();
   toast('已撤销上一步');
+  saveGameState();
 }
 document.getElementById('undoBtn').onclick = undo;
 
@@ -1136,6 +1282,7 @@ document.getElementById('restartBtn').onclick = restartGame;
 function restartGame(){
   ['pauseOverlay','gameOverOverlay','rankOverlay'].forEach(id =>
     document.getElementById(id).classList.add('hidden'));
+  clearGameState();
   initGame();
 }
 
@@ -1203,7 +1350,13 @@ function toast(msg){
 }
 
 // ============ 启动 ============
-initGame();
+if (!loadGameState()) initGame();
+
+// 页面隐藏/关闭时保存状态,防止后台被杀丢失进度
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') saveGameState();
+});
+window.addEventListener('pagehide', saveGameState);
 
 // ============ Service Worker 注册(离线缓存 + 添加到主屏幕)============
 if ('serviceWorker' in navigator) {
